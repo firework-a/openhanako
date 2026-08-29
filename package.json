@@ -49,6 +49,7 @@
     "install:local": "npm run pack && rm -rf /Applications/HanaAgent.app /Applications/Hanako.app && cp -R dist/mac-arm64/HanaAgent.app /Applications/ && printf 'provider: github\\nowner: liliMozi\\nrepo: openhanako\\n' > /Applications/HanaAgent.app/Contents/Resources/app-update.yml && node scripts/sign-local.cjs",
     "dist": "npm run build:computer-use-helper && npm run build:client && npm run build:server && npm run verify:seed-kit && electron-builder --mac dmg",
     "dist:win": "npm run build:computer-use-helper && npm run build:windows-sandbox-helper && npm run generate:windows-icon && npm run build:client && npm run build:server && npm run verify:seed-kit && npm run pack:server:standalone && npm run verify:standalone:server && electron-builder --win nsis",
+    "dist:win:local": "cross-env HANA_SIGN_KEY=./hana-sign.key HANA_SIGN_KEYSET=./local-keyset.json npm run dist:win",
     "dist:linux": "npm run build:client && npm run build:server && npm run verify:seed-kit && electron-builder --linux AppImage deb",
     "verify:seed-kit": "node scripts/verify-seed-kit.mjs",
     "pack:server:standalone": "node scripts/build-standalone-server-artifact.mjs x64",
@@ -126,6 +127,7 @@
     "@types/react-dom": "^19.2.3",
     "@vercel/nft": "^1.5.0",
     "@vitejs/plugin-react": "^5.1.4",
+    "cross-env": "10.1.0",
     "electron": "42.3.0",
     "electron-builder": "^26.8.1",
     "esbuild": "^0.27.4",
@@ -240,7 +242,7 @@
     },
     "nsis": {
       "oneClick": false,
-      "allowToChangeInstallationDirectory": false,
+      "allowToChangeInstallationDirectory": true,
       "shortcutName": "HanaAgent",
       "include": "build/installer.nsh",
       "installerIcon": "desktop/src/icon.ico",
@@ -256,5 +258,14 @@
       "icon": "desktop/src/icon.png",
       "artifactName": "${productName}-${version}-Linux-${arch}.${ext}"
     }
+  },
+  "allowScripts": {
+    "better-sqlite3@12.6.2": true,
+    "node-pty@1.1.0": true,
+    "esbuild@0.27.4": true,
+    "electron-winstaller@5.4.0": true,
+    "protobufjs@7.6.4": true,
+    "protobufjs@7.6.5": true,
+    "@google/genai@1.52.0": true
   }
 }
